@@ -16,33 +16,36 @@ bazel version
 
 https://justcode.nimbco.com/Getting-Tensorflow-Extended-TFX-1.14.0-to-work-with-apple-silicon-natively/
 or
-https://justcode.nimbco.com/Getting-Tensorflow-Extended-TFX-master-to-work-with-apple-silicon-natively/
+https://github.com/tensorflow/tfx/issues/5804
 
 ```
 git clone https://github.com/tangm/ml-metadata.git
 cd ml-metadata
 git checkout v1.14.0-m1fix
+# Add --host_copt=-Wno-error=incompatible-function-pointer-types at line 113 in setup.py
 python setup.py bdist_wheel
-pip install dist/ml_metadata-1.14.0-cp310-cp310-macosx_11_0_universal2.whl
+pip install dist/*.whl
 
 git clone https://github.com/tangm/tfx-bsl.git
 cd tfx-bsl
 git checkout r1.14.0-48-Allow-compilation-on-m1-macs
 pip install numpy # (per `tfx-bsl` source building instructions)
+# Add --host_copt=-Wno-error=incompatible-function-pointer-types at line 98 in setup.py
 python setup.py bdist_wheel
-pip install dist/tfx_bsl-1.14.0-cp310-cp310-macosx_11_0_universal2.whl jsonschema==4.17.3
+pip install dist/*.whl tensorflow==2.13.1
 
 git clone https://github.com/tangm/data-validation.git
 cd data-validation
 git checkout r1.14.0-205-allow-apple-silicon
+# Add --host_copt=-Wno-error=incompatible-function-pointer-types at line 83 in setup.py
 python setup.py bdist_wheel
-pip install dist/tensorflow_data_validation-1.14.0-cp310-cp310-macosx_11_0_universal2.whl
+pip install dist/*.whl
 
-pip install tfx==1.14.0 jsonschema==4.17.3
+pip install tfx==1.14.0
 
 pip install -U google-cloud-aiplatform "shapely<2"
 
-pip install pyfarmhash --force-reinstall --no-cache-dir
+#pip install pyfarmhash --force-reinstall --no-cache-dir
 
 <!-- python -c "from tfx import version ; print('TFX version: {}'.format(version.__version__))" -->
 ```
