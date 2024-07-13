@@ -4,8 +4,8 @@
 import os
 
 import tensorflow as tf
-from keras.utils.vis_utils import plot_model
-import tensorflow_transform as tft 
+from tensorflow.keras.utils import plot_model
+import tensorflow_transform as tft
 
 from heart_disease_transform import (
     CATEGORICAL_FEATURES,
@@ -13,6 +13,7 @@ from heart_disease_transform import (
     NUMERICAL_FEATURES,
     transformed_name,
 )
+
 
 def get_model(show_summary=True):
     """
@@ -26,12 +27,12 @@ def get_model(show_summary=True):
         input_features.append(
             tf.keras.Input(shape=(dim + 1,), name=transformed_name(key))
         )
-    
+
     for feature in NUMERICAL_FEATURES:
         input_features.append(
             tf.keras.Input(shape=(1,), name=transformed_name(feature))
         )
-    
+
     concatenate = tf.keras.layers.concatenate(input_features)
     deep = tf.keras.layers.Dense(256, activation="relu")(concatenate)
     deep = tf.keras.layers.Dense(64, activation="relu")(deep)
@@ -45,15 +46,17 @@ def get_model(show_summary=True):
         loss="binary_crossentropy",
         metrics=[tf.keras.metrics.BinaryAccuracy()]
     )
-    
+
     if show_summary:
         model.summary()
 
     return model
 
+
 def gzip_reader_fn(filenames):
     """Loads compressed data"""
     return tf.data.TFRecordDataset(filenames, compression_type='GZIP')
+
 
 def get_serve_tf_examples_fn(model, tf_transform_output):
     """Returns a function that parses a serialized tf.Example."""
@@ -76,12 +79,13 @@ def get_serve_tf_examples_fn(model, tf_transform_output):
 
     return serve_tf_examples_fn
 
+
 def input_fn(file_pattern, tf_transform_output, batch_size=64):
     """Generates features and labels for tuning/training.
     Args:
         file_pattern: input tfrecord file pattern.
         tf_transform_output: A TFTransformOutput.
-        batch_size: representing the number of consecutive elements of 
+        batch_size: representing the number of consecutive elements of
         returned dataset to combine in a single batch
     Returns:
         A dataset that contains (features, indices) tuple where features
@@ -103,6 +107,8 @@ def input_fn(file_pattern, tf_transform_output, batch_size=64):
     return dataset
 
 # TFX Trainer will call this function.
+
+
 def run_fn(fn_args):
     """Train the model based on given args.
     Args:
@@ -139,10 +145,10 @@ def run_fn(fn_args):
     model.save(
         fn_args.serving_model_dir, save_format="tf", signatures=signatures
     )
-    
+
     plot_model(
-        model, 
-        to_file='images/model_plot.png', 
-        show_shapes=True, 
+        model,
+        to_file='images/model_plot.png',
+        show_shapes=True,
         show_layer_names=True
     )
