@@ -102,6 +102,7 @@ def input_fn(file_pattern, tf_transform_output, batch_size=64):
         features=transformed_feature_spec,
         reader=gzip_reader_fn,
         label_key=transformed_name(LABEL_KEY),
+        num_epochs=1
     )
 
     return dataset
