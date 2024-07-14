@@ -8,5 +8,6 @@ scrape_configs:
   - job_name: "prometheus"
     scrape_interval: 5s
     metrics_path: /monitoring/prometheus/metrics
+    scheme: https
     static_configs:
-      - targets: ["cc-prediction.herokuapp.com"] #TODO: change with our URL
+      - targets: ["mlops-tfx-production-1022.up.railway.app"]

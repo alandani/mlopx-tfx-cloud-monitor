@@ -61,3 +61,11 @@ bazel clean --expunge
 ```
 pip install -r requirements.txt
 ```
+
+
+# Deploy using Railway: Create project first
+
+```
+railway login
+railway init
+railway up
